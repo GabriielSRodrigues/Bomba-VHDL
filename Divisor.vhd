@@ -1,5 +1,5 @@
 library IEEE;
-use IEEE.std_logic_1664.all;
+use IEEE.std_logic_1164.ALL;
 
 entity Divisor is
   port(clock: std_logic;
@@ -13,7 +13,7 @@ architecture archdivisor of Divisor is
     process (clock)
     VARIABLE cont  : NATURAL RANGE 0 to 2499999 := 0;
       begin
-        if clock'EVENT then and clock='1' THEN
+        if (clock'EVENT and clock='1') THEN
           if cont=2499999 then
             clockOut<=not clockOut;
             cont := 0;
