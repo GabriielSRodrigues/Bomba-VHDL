@@ -8,7 +8,7 @@ entity Divisor is
 end Divisor;
 
 architecture archdivisor of Divisor is
-  signal clockOut: std_logic;
+  signal clockOut: std_logic := '0';
   begin
     process (clock)
     VARIABLE cont  : NATURAL RANGE 0 to 2499999 := 0;
@@ -22,4 +22,5 @@ architecture archdivisor of Divisor is
           end if;
       end if;
     end process;
+    clocksaida <= clockOut;
 end archdivisor;

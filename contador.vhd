@@ -3,6 +3,7 @@ use ieee.std_logic_1164.all;
 use ieee.std_logic_arith.all;
 use ieee.std_logic_unsigned.all;
 
+
 entity contador is
 	port( clock,load: in std_logic;
 			valor : in std_logic_vector(5 downto 0);
