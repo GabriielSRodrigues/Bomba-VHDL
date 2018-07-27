@@ -14,7 +14,7 @@ entity Controle is
       volta: in std_logic;
       arma : in std_logic;
       fios: in std_logic_vector(4 downto 0);
-      led0,led1,led2,led3,led4,led5,led6,led7: out std_logic_vector(0 to 6)
+      saida_led: out std_logic_vector(0 to 55)
       );
 end Controle;
 
@@ -23,19 +23,10 @@ architecture archControle of Controle is
     signal codigo : std_logic_vector(3 downto 0);
     signal state : BombaStage;
 
-
-    -----------------------------------
-    --    SINAIS PARA
-    --      LCD
-    -- Sinais para o tempo da bomba
-    signal tempo_unidade,tempo_dezena : std_logic_vector(3 downto 0);
-    signal led_tempo_unidade,led_tempo_dezena : std_logic_vector(0 to 6);
-    -- Sinais para o cÃ³digo inserido
     signal led_codigo_unidade,led_codigo_dezena : std_logic_vector(0 to 6);
-    -- Sinais para o estado da bomba (defused,fudeu)
-    signal s0,s1,s2,s3,s4,s5,s6,s7 : std_logic_vector(0 to 6);
-    signal tipo_estado : std_logic;
+    signal tempo_unidade,tempo_dezena : std_logic_vector(3 downto 0);
 
+    signal tempsaida :  std_logic_vector(0 to 55);
     signal reset_seletor : std_logic;
 
 
@@ -62,46 +53,19 @@ architecture archControle of Controle is
           );
     end component;
 
-    component LEDNumerico is
-      port(eLED: in std_logic_vector(3 downto 0);
-    		   sLED: out std_logic_vector(0 to 6)
-    		  );
+    component Saida is
+        port(
+            state: in BombaStage;
+            led_codigo_unidade,led_codigo_dezena : in std_logic_vector(0 to 6);
+            tempo_dezena,tempo_unidade: in std_logic_vector(3 downto 0);
+            saida_led: out std_logic_vector(0 to 55)
+      	  );
     end component;
 
-    component LEDDefused is
-      port( tipo : in std_logic;
-            s0,s1,s2,s3,s4,s5,s6,s7: out std_logic_vector(0 to 6)
-          );
-    end component;
     begin
-
-      process(state)
-        begin
-          if (state = armando or state = contagem) then
-              led7 <= led_codigo_dezena;
-              led6 <= led_codigo_unidade;
-          end if;
-
-          if(state = contagem) THEN
-            led5 <= led_tempo_dezena;
-            led4 <= led_tempo_unidade;
-          end if;
-
-          if(state = defused or state = exploded) THEN
-            led0 <= s0;
-            led1 <= s1;
-            led2 <= s2;
-            led3 <= s3;
-            led4 <= s4;
-            led5 <= s5;
-            led6 <= s6;
-            led7 <= s7;
-          end if;
-
-      end process;
-
       reset_seletor <= '1' when ((state = armando) and (arma = '1')) else '0';
-      tipo_estado <=  '1' when (state = exploded) else '0';
+
+      saida_led <= tempsaida;
 
       Divisor1 : Divisor
         port map(clock=>clock,clocksaida=>customclock);
@@ -112,13 +76,7 @@ architecture archControle of Controle is
       operacao1 : Operation
         port map(clock=>customclock,codigo=>codigo,arma=>arma,state=>state,out_dez=>tempo_dezena,out_unidade=>tempo_unidade,fios=>fios);
 
-      led_tempo_1 : LEDNumerico
-        port map(eLED=>tempo_unidade,sLED=>led_tempo_unidade);
-
-      led_tempo_2 : LEDNumerico
-        port map(eLED=>tempo_dezena,sLED=>led_tempo_dezena);
-
-      led_status : LEDDefused
-        port map(tipo => tipo_estado,s0=>s0,s1=>s1,s2=>s2,s3=>s3,s4=>s4,s5=>s5,s6=>s6,s7=>s7);
+      saidaUnica : Saida
+        port map(state=>state,led_codigo_unidade=>led_codigo_unidade,led_codigo_dezena=>led_codigo_dezena,tempo_dezena=>tempo_dezena,tempo_unidade=>tempo_unidade,saida_led=>tempsaida);
 
 end archControle;

@@ -29,12 +29,6 @@ architecture archOperation of Operation is
   		  );
   end component;
 
-  component LED is
-	port(eLED: in std_logic_vector(3 downto 0);
-		  sLED: out std_logic_vector(0 to 6)
-		  );
-	end component;
-
   begin
 
     process(fios)
