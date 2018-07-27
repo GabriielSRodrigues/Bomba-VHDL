@@ -9,7 +9,8 @@ entity LEDDefused is
 				s3: out std_logic_vector(0 to 6);
 				s4: out std_logic_vector(0 to 6);
 				s5: out std_logic_vector(0 to 6);
-				s6: out std_logic_vector(0 to 6)
+				s6: out std_logic_vector(0 to 6);
+				s7: out std_logic_vector(0 to 6)
 			);
 end LEDDefused;
 
@@ -22,5 +23,5 @@ begin
 		s4 <= "0100100" when tipo = '0' else "1000001";
 		s5 <= "0010000" when tipo = '0' else "1000001";
 		s6 <= "1000010" when tipo = '0' else "1000001";
-
+		s7 <= "1111111";
 end archLED;

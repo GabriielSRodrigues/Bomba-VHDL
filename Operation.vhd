@@ -8,25 +8,23 @@ entity Operation is
   port(clock: in std_logic;
       codigo: in std_logic_vector(3 downto 0);
       arma : in std_logic;
-      tempo: out std_logic_vector(5 downto 0);
+      out_dez,out_unidade : out std_logic_vector(3 downto 0);
       state: out BombaStage
       );
 end Operation;
 
 architecture archOperation of Operation is
 
-  signal acabou,explodiu : std_logic;
+  signal acabou,explodiu,reset_contador : std_logic;
   signal codigo_reg : std_logic_vector(3 downto 0);
   SIGNAL estado,proximo_estado: BombaStage := armando;
 
-
   component contador is
-    port(
-		clock,load: in std_logic;
-      valor : in std_logic_vector(5 downto 0);
-      scont: out std_logic_vector(5 downto 0);
-      acabou: out std_logic
-      );
+    port( clock,load: in std_logic;
+  			in_dez,in_unidade : in std_logic_vector(3 downto 0);
+  			out_dez,out_unidade : out std_logic_vector(3 downto 0);
+  			acabou: out std_logic
+  		  );
   end component;
 
   component LED is
@@ -68,9 +66,11 @@ architecture archOperation of Operation is
           estado <= proximo_estado;
       end process;
       state <= estado;
+      reset_contador <= '1' when estado=armando else '0';
+
+
+
     contador_1 : contador
-      port map(clock=>clock,load=>arma, valor=>"111100", scont=>tempo,acabou=>explodiu);
---    bcd: LED
-  -- 	  port map(eLED=>fio0,sLED=>fio1);
+      port map(clock=>clock,load=>reset_contador,in_dez=>"0110",in_unidade=>"0000",out_dez=>out_dez,out_unidade=>out_unidade,acabou=>explodiu);
 
 end archOperation;

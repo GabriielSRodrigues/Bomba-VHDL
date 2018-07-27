@@ -36,8 +36,8 @@
 # -------------------------------------------------------------------------- #
 
 
-set_global_assignment -name FAMILY "Cyclone IV GX"
-set_global_assignment -name DEVICE auto
+set_global_assignment -name FAMILY "Cyclone II"
+set_global_assignment -name DEVICE EP2C35F672C6
 set_global_assignment -name TOP_LEVEL_ENTITY Controle
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION "13.0 SP1"
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "19:31:52  JULY 23, 2018"
@@ -55,4 +55,7 @@ set_global_assignment -name VHDL_FILE Divisor.vhd
 set_global_assignment -name VHDL_FILE Controle.vhd
 set_global_assignment -name VHDL_FILE contador.vhd
 set_global_assignment -name VHDL_FILE Common.vhd -library Bomba
+set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
+set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
+set_global_assignment -name STRATIX_DEVICE_IO_STANDARD "3.3-V LVTTL"
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
