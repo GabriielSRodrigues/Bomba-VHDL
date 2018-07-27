@@ -13,6 +13,7 @@ entity Controle is
       avanca: in std_logic;
       volta: in std_logic;
       arma : in std_logic;
+      fios: in std_logic_vector(4 downto 0);
       led0,led1,led2,led3,led4,led5,led6,led7: out std_logic_vector(0 to 6)
       );
 end Controle;
@@ -29,7 +30,7 @@ architecture archControle of Controle is
     -- Sinais para o tempo da bomba
     signal tempo_unidade,tempo_dezena : std_logic_vector(3 downto 0);
     signal led_tempo_unidade,led_tempo_dezena : std_logic_vector(0 to 6);
-    -- Sinais para o código inserido
+    -- Sinais para o cÃ³digo inserido
     signal led_codigo_unidade,led_codigo_dezena : std_logic_vector(0 to 6);
     -- Sinais para o estado da bomba (defused,fudeu)
     signal s0,s1,s2,s3,s4,s5,s6,s7 : std_logic_vector(0 to 6);
@@ -43,7 +44,8 @@ architecture archControle of Controle is
           codigo: in std_logic_vector(3 downto 0);
           arma : in std_logic;
           out_dez,out_unidade : out std_logic_vector(3 downto 0);
-          state: out BombaStage
+          state: out BombaStage;
+          fios: in std_logic_vector(4 downto 0)
           );
     end component;
 
@@ -108,7 +110,7 @@ architecture archControle of Controle is
         port map(avanca=>avanca,volta=>volta,clock=>customclock,reset=>reset_seletor,valor=>codigo,s_0=>led_codigo_unidade,s_1=>led_codigo_dezena);
 
       operacao1 : Operation
-        port map(clock=>customclock,codigo=>codigo,arma=>arma,state=>state,out_dez=>tempo_dezena,out_unidade=>tempo_unidade);
+        port map(clock=>customclock,codigo=>codigo,arma=>arma,state=>state,out_dez=>tempo_dezena,out_unidade=>tempo_unidade,fios=>fios);
 
       led_tempo_1 : LEDNumerico
         port map(eLED=>tempo_unidade,sLED=>led_tempo_unidade);

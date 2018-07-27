@@ -9,13 +9,15 @@ entity Operation is
       codigo: in std_logic_vector(3 downto 0);
       arma : in std_logic;
       out_dez,out_unidade : out std_logic_vector(3 downto 0);
-      state: out BombaStage
-      );
+      state: out BombaStage;
+		fios: in std_logic_vector(4 downto 0)
+	  );
 end Operation;
 
 architecture archOperation of Operation is
 
-  signal acabou,explodiu,reset_contador : std_logic;
+  signal acabou,explodiu,reset_contador: std_logic;
+  signal fio_defused,fio_exploded : std_logic := '0';
   signal codigo_reg : std_logic_vector(3 downto 0);
   SIGNAL estado,proximo_estado: BombaStage := armando;
 
@@ -34,8 +36,19 @@ architecture archOperation of Operation is
 	end component;
 
   begin
-    process (clock)
 
+    process(fios)
+      begin
+        if(fio_defused /='1' and fio_exploded /='1') then
+          if (fios = "01011") then
+            fio_defused <= '1';
+          elsif ((fios(4) ='1') or (fios(2)='1')) then
+            fio_exploded <= '1';
+          end if;
+        end if;
+    end process;
+
+    process (clock)
       variable def_code : std_logic_vector(3 downto 0);
       begin
         if (clock'event and clock ='1') then
@@ -46,13 +59,16 @@ architecture archOperation of Operation is
                 proximo_estado <= contagem;
               end if;
             when contagem =>
-              if (explodiu = '1') then
+              if (explodiu = '1' or fio_exploded = '1') then
                 proximo_estado <= exploded;
+              elsif(fio_defused = '1') THEN
+                proximo_estado <= defused;
               elsif (arma='1') THEN
                 if(codigo = def_code) then
                   proximo_estado <= defused;
                 end if;
               end if;
+
             when defused =>
               -- Controle cuida disso
             when exploded =>
